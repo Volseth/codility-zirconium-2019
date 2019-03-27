@@ -1,34 +1,48 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+
+ class Developer{
+    private int frontSkill;
+    private int backSkill;
+    public Developer(int frontSkill, int backSkill)
+    {
+        this.frontSkill=frontSkill;
+        this.backSkill=backSkill;
+    }
+
+    public int getBackSkill() {
+        return backSkill;
+    }
+
+    public int getFrontSkill() {
+        return frontSkill;
+    }
+    public static Comparator<Developer> developerComparator= new Comparator<Developer>() {
+        @Override
+        public int compare(Developer o1, Developer o2) {
+            return ((o2.getFrontSkill() - o2.getBackSkill()) - (o1.getFrontSkill() - o1.getBackSkill()));
+        }
+    };
+}
 
 public class Solution {
 
     public static int Solution(int[] A, int[]B, int F) {
         int sum=0;
-        int maxDiff =-250000;
-        int index=0;
-        int i=0;
-            while (F>0) {
-                if(maxDiff<A[i]-B[i] && A[i]!=-1){
-                    maxDiff=A[i]-B[i];
-                    index=i;
-                    i++;
-                }
-                else {
-                    i++;
-                }
-                if(i==A.length){
-                    sum += A[index];
-                    A[index] = -1;
-                    i=0;
-                    maxDiff=-250000;
-                    F--;
-                }
-
+        ArrayList<Developer> developerArrayList=new ArrayList<>();
+        for(int i=0;i<A.length;i++){
+            developerArrayList.add(new Developer(A[i],B[i]));
+        }
+        developerArrayList.sort(Developer.developerComparator);
+        for (Developer d:developerArrayList) {
+            if(F>0){
+               sum+=d.getFrontSkill();
+               F--;
             }
-            for (int j=0;j<B.length;j++){
-                if(A[j]!=-1){
-                    sum+=B[j];
-                }
+            else{
+                sum+=d.getBackSkill();
             }
+        }
         return sum;
     }
 
